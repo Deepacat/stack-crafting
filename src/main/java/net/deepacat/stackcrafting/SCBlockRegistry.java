@@ -5,6 +5,8 @@ import net.deepacat.stackcrafting.workbench.StackWorkbenchBlock;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
@@ -22,12 +24,12 @@ public class SCBlockRegistry {
         return toReturn;
     }
 
-    public static<T extends Block> RegistryObject<Item> registerBlockItem(String name, RegistryObject<T> block) {
+    public static <T extends Block> RegistryObject<Item> registerBlockItem(String name, RegistryObject<T> block) {
         return SCItemRegistry.ITEMS.register(name, () -> new BlockItem(block.get(), new Item.Properties()));
     }
 
     public static final RegistryObject<Block> STACK_WORKBENCH = registerBlock("stack_crafting_table",
-            () -> new StackWorkbenchBlock(Block.Properties.of()));
+            () -> new StackWorkbenchBlock(BlockBehaviour.Properties.copy(Blocks.IRON_BLOCK)));
 
     public static void register(IEventBus eventBus) {
         BLOCKS.register(eventBus);
