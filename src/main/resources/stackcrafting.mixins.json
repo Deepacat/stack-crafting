@@ -1,0 +1,13 @@
+{
+	"required": true,
+	"package": "net.deepacat.stackcrafting.mixins",
+	"compatibilityLevel": "JAVA_17",
+	"mixins": [
+
+	],
+	"client": [
+
+	],
+	"minVersion": "0.8.5",
+	"refmap": "stackcrafting.refmap.json"
+}
