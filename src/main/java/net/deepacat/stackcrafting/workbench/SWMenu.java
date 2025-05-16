@@ -1,5 +1,6 @@
 package net.deepacat.stackcrafting.workbench;
 
+import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.protocol.game.ClientboundContainerSetSlotPacket;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.Container;
@@ -17,7 +18,7 @@ import net.minecraft.world.level.block.Blocks;
 import java.util.Optional;
 
 
-public class StackWorkbenchMenu extends RecipeBookMenu<CraftingContainer> {
+public class SWMenu extends RecipeBookMenu<CraftingContainer> {
     public static final int RESULT_SLOT = 0;
     private static final int CRAFT_SLOT_START = 1;
     private static final int CRAFT_SLOT_END = 10;
@@ -30,7 +31,11 @@ public class StackWorkbenchMenu extends RecipeBookMenu<CraftingContainer> {
     private final ContainerLevelAccess access;
     private final Player player;
 
-    public StackWorkbenchMenu(int pContainerId, Inventory pPlayerInventory, ContainerLevelAccess pAccess) {
+    public SWMenu(int pContainerId, Inventory pPlayerInventory) {
+        this(pContainerId, pPlayerInventory, ContainerLevelAccess.NULL);
+    }
+
+    public SWMenu(int pContainerId, Inventory pPlayerInventory, ContainerLevelAccess pAccess) {
         super(MenuType.CRAFTING, pContainerId);
         this.access = pAccess;
         this.player = pPlayerInventory.player;
@@ -52,6 +57,9 @@ public class StackWorkbenchMenu extends RecipeBookMenu<CraftingContainer> {
             this.addSlot(new Slot(pPlayerInventory, l, 8 + l * 18, 142));
         }
 
+    }
+    public SWMenu(int pContainerId, Inventory inventory, FriendlyByteBuf extraData) {
+        this(pContainerId, inventory, ContainerLevelAccess.NULL);
     }
 
     protected static void slotChangedCraftingGrid(AbstractContainerMenu pMenu, Level pLevel, Player pPlayer, CraftingContainer pContainer, ResultContainer pResult) {

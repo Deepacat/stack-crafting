@@ -5,19 +5,21 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.MenuProvider;
-import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.SimpleMenuProvider;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.inventory.ContainerLevelAccess;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.BlockHitResult;
 import org.jetbrains.annotations.Nullable;
 
-public class StackWorkbenchBlock extends Block {
-    public StackWorkbenchBlock(Properties pProperties) {
-        super(pProperties);
+public class SWBlock extends Block {
+    private static final Component CONTAINER_TITLE = Component.literal("bwaaa haiii");
+
+    public SWBlock() {
+        super(Properties.copy(Blocks.STONE).noOcclusion());
     }
 
     @Override
@@ -25,19 +27,17 @@ public class StackWorkbenchBlock extends Block {
         if (pLevel.isClientSide) {
             return InteractionResult.SUCCESS;
         } else {
-            pPlayer.openMenu(new MenuProvider() {
-                @Override
-                public Component getDisplayName() {
-                    return Component.literal("cwaftew");
-                }
-
-                @Nullable
-                @Override
-                public AbstractContainerMenu createMenu(int pContainerId, Inventory pPlayerInventory, Player pPlayer) {
-                    return new StackWorkbenchMenu(pContainerId, pPlayerInventory, ContainerLevelAccess.create(pLevel, pPos));
-                }
-            });
+            pPlayer.openMenu(pState.getMenuProvider(pLevel, pPos));
             return InteractionResult.CONSUME;
         }
     }
+
+    @Override
+    @Nullable
+    public MenuProvider getMenuProvider(BlockState pState, Level pLevel, BlockPos pPos) {
+        return new SimpleMenuProvider((i, inventory, player) -> {
+            return new SWMenu(i, inventory, ContainerLevelAccess.create(pLevel, pPos));
+        }, CONTAINER_TITLE);
+    }
+
 }

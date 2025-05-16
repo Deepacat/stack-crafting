@@ -1,9 +1,13 @@
 package net.deepacat.stackcrafting;
 
+import net.deepacat.stackcrafting.workbench.SWMenu;
+import net.deepacat.stackcrafting.workbench.SWScreen;
+import net.minecraft.client.gui.screens.MenuScreens;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 import net.minecraftforge.fml.event.lifecycle.FMLLoadCompleteEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import net.minecraftforge.network.NetworkRegistry;
@@ -26,10 +30,17 @@ public class StackCrafting {
 
     public StackCrafting() {
         MinecraftForge.EVENT_BUS.register(this);
-        IEventBus modBus = FMLJavaModLoadingContext.get().getModEventBus();
-        modBus.addListener(this::postInit);
-        SCBlockRegistry.BLOCKS.register(modBus);
-        SCItemRegistry.ITEMS.register(modBus);
+        IEventBus modEventBus = FMLJavaModLoadingContext.get().getModEventBus();
+        modEventBus.addListener(this::postInit);
+        SCBlockRegistry.BLOCKS.register(modEventBus);
+        SCItemRegistry.ITEMS.register(modEventBus);
+        SCMenuRegistry.register(modEventBus);
+
+        modEventBus.addListener(this::clientSetup);
+    }
+
+    private void clientSetup(final FMLClientSetupEvent e) {
+        MenuScreens.register(SCMenuRegistry.SW_MENU.get(), SWScreen::new);
     }
 
     public void postInit(FMLLoadCompleteEvent evt) {
