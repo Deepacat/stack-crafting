@@ -33,7 +33,7 @@ public class StackCrafting {
         IEventBus modEventBus = FMLJavaModLoadingContext.get().getModEventBus();
         modEventBus.addListener(this::postInit);
         SCBlockRegistry.BLOCKS.register(modEventBus);
-        SCItemRegistry.ITEMS.register(modEventBus);
+//        SCItemRegistry.ITEMS.register(modEventBus);
         SCMenuRegistry.register(modEventBus);
 
         modEventBus.addListener(this::clientSetup);
