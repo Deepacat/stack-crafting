@@ -35,9 +35,7 @@ public class SWBlock extends Block {
     @Override
     @Nullable
     public MenuProvider getMenuProvider(BlockState pState, Level pLevel, BlockPos pPos) {
-        return new SimpleMenuProvider((i, inventory, player) -> {
-            return new SWMenu(i, inventory, ContainerLevelAccess.create(pLevel, pPos));
-        }, CONTAINER_TITLE);
+        return new SimpleMenuProvider((i, inventory, player) -> new SWMenu(i, inventory, ContainerLevelAccess.create(pLevel, pPos)), CONTAINER_TITLE);
     }
 
 }

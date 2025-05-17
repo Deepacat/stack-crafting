@@ -1,6 +1,5 @@
 package net.deepacat.stackcrafting;
 
-import net.deepacat.stackcrafting.workbench.SWMenu;
 import net.deepacat.stackcrafting.workbench.SWScreen;
 import net.minecraft.client.gui.screens.MenuScreens;
 import net.minecraft.resources.ResourceLocation;
@@ -22,7 +21,7 @@ public class StackCrafting {
     public static final Logger LOGGER = LoggerFactory.getLogger(MODID);
 
     private static final String PROTOCOL = "1";
-    public static final SimpleChannel Network = NetworkRegistry.ChannelBuilder.named(new ResourceLocation(MODID, "main"))
+    public static final SimpleChannel NETWORK = NetworkRegistry.ChannelBuilder.named(new ResourceLocation(MODID, "main"))
             .clientAcceptedVersions(PROTOCOL::equals)
             .serverAcceptedVersions(PROTOCOL::equals)
             .networkProtocolVersion(() -> PROTOCOL)

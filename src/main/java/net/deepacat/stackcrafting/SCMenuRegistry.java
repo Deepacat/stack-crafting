@@ -13,12 +13,13 @@ import net.minecraftforge.registries.RegistryObject;
 public class SCMenuRegistry {
     private static final DeferredRegister<MenuType<?>> MENUS = DeferredRegister.create(ForgeRegistries.MENU_TYPES, StackCrafting.MODID);
 
-    public static void register(IEventBus eventBus){
+    public static void register(IEventBus eventBus) {
         MENUS.register(eventBus);
     }
+
     private static <T extends AbstractContainerMenu> RegistryObject<MenuType<T>> registerMenuType(IContainerFactory<T> factory, String name) {
         return MENUS.register(name, () -> IForgeMenuType.create(factory));
     }
 
-    public static final RegistryObject<MenuType<SWMenu>> SW_MENU = registerMenuType(SWMenu::new,"sw_menu");
+    public static final RegistryObject<MenuType<SWMenu>> SW_MENU = registerMenuType(SWMenu::new, "sw_menu");
 }

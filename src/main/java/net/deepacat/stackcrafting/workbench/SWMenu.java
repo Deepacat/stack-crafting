@@ -1,5 +1,6 @@
 package net.deepacat.stackcrafting.workbench;
 
+import net.deepacat.stackcrafting.SCBlockRegistry;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.protocol.game.ClientboundContainerSetSlotPacket;
 import net.minecraft.server.level.ServerPlayer;
@@ -119,7 +120,7 @@ public class SWMenu extends RecipeBookMenu<CraftingContainer> {
      * Determines whether supplied player can use this container
      */
     public boolean stillValid(Player pPlayer) {
-        return stillValid(this.access, pPlayer, Blocks.CRAFTING_TABLE);
+        return stillValid(this.access, pPlayer, SCBlockRegistry.STACK_WORKBENCH.get());
     }
 
     /**
