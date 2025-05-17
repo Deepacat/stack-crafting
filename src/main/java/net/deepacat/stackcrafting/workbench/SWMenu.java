@@ -1,6 +1,7 @@
 package net.deepacat.stackcrafting.workbench;
 
 import net.deepacat.stackcrafting.SCBlockRegistry;
+import net.deepacat.stackcrafting.SCMenuRegistry;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.protocol.game.ClientboundContainerSetSlotPacket;
 import net.minecraft.server.level.ServerPlayer;
@@ -37,7 +38,7 @@ public class SWMenu extends RecipeBookMenu<CraftingContainer> {
     }
 
     public SWMenu(int pContainerId, Inventory pPlayerInventory, ContainerLevelAccess pAccess) {
-        super(MenuType.CRAFTING, pContainerId);
+        super(SCMenuRegistry.SW_MENU.get(), pContainerId);
         this.access = pAccess;
         this.player = pPlayerInventory.player;
         this.addSlot(new ResultSlot(pPlayerInventory.player, this.craftSlots, this.resultSlots, 0, 124, 35));

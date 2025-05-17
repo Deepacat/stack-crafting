@@ -34,6 +34,7 @@ public class StackCrafting {
         SCBlockRegistry.BLOCKS.register(modEventBus);
         SCItemRegistry.ITEMS.register(modEventBus);
         SCMenuRegistry.register(modEventBus);
+        SCRecipeTypes.RECIPE_TYPES.register(modEventBus);
 
         modEventBus.addListener(this::clientSetup);
     }
