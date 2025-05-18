@@ -42,29 +42,31 @@ public class SWMenu extends RecipeBookMenu<CraftingContainer> {
         this.player = pPlayerInventory.player;
         this.addSlot(new ResultSlot(pPlayerInventory.player, this.craftSlots, this.resultSlots, 0, 124, 35));
 
-        for(int i = 0; i < 3; ++i) {
-            for(int j = 0; j < 3; ++j) {
+        for (int i = 0; i < 3; ++i) {
+            for (int j = 0; j < 3; ++j) {
                 this.addSlot(new Slot(this.craftSlots, j + i * 3, 30 + j * 18, 17 + i * 18));
             }
         }
 
-        for(int k = 0; k < 3; ++k) {
-            for(int i1 = 0; i1 < 9; ++i1) {
+        for (int k = 0; k < 3; ++k) {
+            for (int i1 = 0; i1 < 9; ++i1) {
                 this.addSlot(new Slot(pPlayerInventory, i1 + k * 9 + 9, 8 + i1 * 18, 84 + k * 18));
             }
         }
 
-        for(int l = 0; l < 9; ++l) {
+        for (int l = 0; l < 9; ++l) {
             this.addSlot(new Slot(pPlayerInventory, l, 8 + l * 18, 142));
         }
 
     }
+
     public SWMenu(int pContainerId, Inventory inventory, FriendlyByteBuf extraData) {
         this(pContainerId, inventory, ContainerLevelAccess.NULL);
     }
+
     protected static void slotChangedCraftingGrid(AbstractContainerMenu pMenu, Level pLevel, Player pPlayer, CraftingContainer pContainer, ResultContainer pResult) {
         if (!pLevel.isClientSide) {
-            ServerPlayer serverplayer = (ServerPlayer)pPlayer;
+            ServerPlayer serverplayer = (ServerPlayer) pPlayer;
             ItemStack itemstack = ItemStack.EMPTY;
             Optional<CraftingRecipe> optional = pLevel.getServer().getRecipeManager().getRecipeFor(RecipeType.CRAFTING, pContainer, pLevel);
 //            if (optional.isPresent()) {
@@ -199,7 +201,7 @@ public class SWMenu extends RecipeBookMenu<CraftingContainer> {
     }
 
     public RecipeBookType getRecipeBookType() {
-        return null;
+        return RecipeBookType.CRAFTING;
     }
 
     public boolean shouldMoveToInventory(int pSlotIndex) {
