@@ -1,5 +1,6 @@
-package net.deepacat.stackcrafting;
+package net.deepacat.stackcrafting.Registry;
 
+import net.deepacat.stackcrafting.StackCrafting;
 import net.minecraft.world.item.Item;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.registries.DeferredRegister;

@@ -1,5 +1,6 @@
-package net.deepacat.stackcrafting;
+package net.deepacat.stackcrafting.Registry;
 
+import net.deepacat.stackcrafting.StackCrafting;
 import net.deepacat.stackcrafting.workbench.SWMenu;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.inventory.MenuType;

@@ -1,6 +1,7 @@
-package net.deepacat.stackcrafting;
+package net.deepacat.stackcrafting.Registry;
 
 
+import net.deepacat.stackcrafting.StackCrafting;
 import net.deepacat.stackcrafting.workbench.SWBlock;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.Item;

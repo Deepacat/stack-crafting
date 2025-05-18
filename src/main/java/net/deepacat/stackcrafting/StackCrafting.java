@@ -1,5 +1,6 @@
 package net.deepacat.stackcrafting;
 
+import net.deepacat.stackcrafting.Registry.*;
 import net.deepacat.stackcrafting.workbench.SWScreen;
 import net.minecraft.client.gui.screens.MenuScreens;
 import net.minecraft.resources.ResourceLocation;
@@ -35,6 +36,7 @@ public class StackCrafting {
         SCItemRegistry.ITEMS.register(modEventBus);
         SCMenuRegistry.register(modEventBus);
         SCRecipeTypes.RECIPE_TYPES.register(modEventBus);
+        SCRecipeSerializer.RECIPE_SERIALIZERS.register(modEventBus);
 
         modEventBus.addListener(this::clientSetup);
     }

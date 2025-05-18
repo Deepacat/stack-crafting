@@ -1,7 +1,7 @@
 package net.deepacat.stackcrafting.workbench;
 
-import net.deepacat.stackcrafting.SCBlockRegistry;
-import net.deepacat.stackcrafting.SCMenuRegistry;
+import net.deepacat.stackcrafting.Registry.SCBlockRegistry;
+import net.deepacat.stackcrafting.Registry.SCMenuRegistry;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.protocol.game.ClientboundContainerSetSlotPacket;
 import net.minecraft.server.level.ServerPlayer;
@@ -15,7 +15,6 @@ import net.minecraft.world.item.crafting.CraftingRecipe;
 import net.minecraft.world.item.crafting.Recipe;
 import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.Blocks;
 
 import java.util.Optional;
 
@@ -63,21 +62,20 @@ public class SWMenu extends RecipeBookMenu<CraftingContainer> {
     public SWMenu(int pContainerId, Inventory inventory, FriendlyByteBuf extraData) {
         this(pContainerId, inventory, ContainerLevelAccess.NULL);
     }
-
     protected static void slotChangedCraftingGrid(AbstractContainerMenu pMenu, Level pLevel, Player pPlayer, CraftingContainer pContainer, ResultContainer pResult) {
         if (!pLevel.isClientSide) {
             ServerPlayer serverplayer = (ServerPlayer)pPlayer;
             ItemStack itemstack = ItemStack.EMPTY;
             Optional<CraftingRecipe> optional = pLevel.getServer().getRecipeManager().getRecipeFor(RecipeType.CRAFTING, pContainer, pLevel);
-            if (optional.isPresent()) {
-                CraftingRecipe craftingrecipe = optional.get();
-                if (pResult.setRecipeUsed(pLevel, serverplayer, craftingrecipe)) {
-                    ItemStack itemstack1 = craftingrecipe.assemble(pContainer, pLevel.registryAccess());
-                    if (itemstack1.isItemEnabled(pLevel.enabledFeatures())) {
-                        itemstack = itemstack1;
-                    }
-                }
-            }
+//            if (optional.isPresent()) {
+//                CraftingRecipe craftingrecipe = optional.get();
+//                if (pResult.setRecipeUsed(pLevel, serverplayer, craftingrecipe)) {
+//                    ItemStack itemstack1 = craftingrecipe.assemble(pContainer, pLevel.registryAccess());
+//                    if (itemstack1.isItemEnabled(pLevel.enabledFeatures())) {
+//                        itemstack = itemstack1;
+//                    }
+//                }
+//            }
 
             pResult.setItem(0, itemstack);
             pMenu.setRemoteSlot(0, itemstack);
@@ -89,8 +87,8 @@ public class SWMenu extends RecipeBookMenu<CraftingContainer> {
      * Callback for when the crafting matrix is changed.
      */
     public void slotsChanged(Container pInventory) {
-        this.access.execute((p_39386_, p_39387_) -> {
-            slotChangedCraftingGrid(this, p_39386_, this.player, this.craftSlots, this.resultSlots);
+        this.access.execute((level, blockPos) -> {
+            slotChangedCraftingGrid(this, level, this.player, this.craftSlots, this.resultSlots);
         });
     }
 
@@ -112,7 +110,7 @@ public class SWMenu extends RecipeBookMenu<CraftingContainer> {
      */
     public void removed(Player pPlayer) {
         super.removed(pPlayer);
-        this.access.execute((p_39371_, p_39372_) -> {
+        this.access.execute((level, blockPos) -> {
             this.clearContainer(pPlayer, this.craftSlots);
         });
     }
@@ -135,8 +133,8 @@ public class SWMenu extends RecipeBookMenu<CraftingContainer> {
             ItemStack itemstack1 = slot.getItem();
             itemstack = itemstack1.copy();
             if (pIndex == 0) {
-                this.access.execute((p_39378_, p_39379_) -> {
-                    itemstack1.getItem().onCraftedBy(itemstack1, p_39378_, pPlayer);
+                this.access.execute((level, blockPos) -> {
+                    itemstack1.getItem().onCraftedBy(itemstack1, level, pPlayer);
                 });
                 if (!this.moveItemStackTo(itemstack1, 10, 46, true)) {
                     return ItemStack.EMPTY;
@@ -201,7 +199,7 @@ public class SWMenu extends RecipeBookMenu<CraftingContainer> {
     }
 
     public RecipeBookType getRecipeBookType() {
-        return RecipeBookType.CRAFTING;
+        return null;
     }
 
     public boolean shouldMoveToInventory(int pSlotIndex) {
