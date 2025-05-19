@@ -227,10 +227,10 @@ public class SWRecipe implements IShapedRecipe<CraftingContainer> {
 
     public boolean isIncomplete() {
         NonNullList<Ingredient> nonnulllist = this.getIngredients();
-        return nonnulllist.isEmpty() || nonnulllist.stream().filter((p_151277_) -> {
-            return !p_151277_.isEmpty();
-        }).anyMatch((p_151273_) -> {
-            return ForgeHooks.hasNoElements(p_151273_);
+        return nonnulllist.isEmpty() || nonnulllist.stream().filter((empty) -> {
+            return !empty.isEmpty();
+        }).anyMatch((ingredient) -> {
+            return ForgeHooks.hasNoElements(ingredient);
         });
     }
 
