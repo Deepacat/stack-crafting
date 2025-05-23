@@ -3,23 +3,23 @@
   "category": "equipment",
   "key": {
     "#": {
-      "item": "minecraft:stick"
+      "item": "minecraft:iron_ingot"
     },
     "X": {
-      "item": "minecraft:flint"
+      "item": "minecraft:gold_ingot"
     },
     "Y": {
-      "item": "minecraft:feather"
+      "item": "minecraft:dirt"
     }
   },
   "pattern": [
-    "X",
     "#",
+    "X",
     "Y"
   ],
   "result": {
-    "count": 4,
-    "item": "minecraft:arrow"
+    "count": 7,
+    "item": "minecraft:diamond"
   },
   "show_notification": true
 }

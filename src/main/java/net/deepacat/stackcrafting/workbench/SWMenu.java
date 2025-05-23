@@ -69,9 +69,9 @@ public class SWMenu extends RecipeBookMenu<CraftingContainer> {
         if (!pLevel.isClientSide) {
             ServerPlayer serverplayer = (ServerPlayer) pPlayer;
             ItemStack itemstack = ItemStack.EMPTY;
-            Optional<SWCraftingRecipe> optional = pLevel.getServer().getRecipeManager().getRecipeFor(SCRecipeTypes.STACK_CRAFTING.get(), pContainer, pLevel);
+            Optional<SWRecipe> optional = pLevel.getServer().getRecipeManager().getRecipeFor(SCRecipeTypes.STACK_CRAFTING.get(), pContainer, pLevel);
             if (optional.isPresent()) {
-                SWCraftingRecipe craftingrecipe = optional.get();
+                SWRecipe craftingrecipe = optional.get();
                 if (pResult.setRecipeUsed(pLevel, serverplayer, craftingrecipe)) {
                     ItemStack itemstack1 = craftingrecipe.assemble(pContainer, pLevel.registryAccess());
                     if (itemstack1.isItemEnabled(pLevel.enabledFeatures())) {
