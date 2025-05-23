@@ -2,6 +2,7 @@ package net.deepacat.stackcrafting.workbench;
 
 import net.deepacat.stackcrafting.Registry.SCBlockRegistry;
 import net.deepacat.stackcrafting.Registry.SCMenuRegistry;
+import net.deepacat.stackcrafting.Registry.SCRecipeTypes;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.protocol.game.ClientboundContainerSetSlotPacket;
 import net.minecraft.server.level.ServerPlayer;
@@ -68,16 +69,16 @@ public class SWMenu extends RecipeBookMenu<CraftingContainer> {
         if (!pLevel.isClientSide) {
             ServerPlayer serverplayer = (ServerPlayer) pPlayer;
             ItemStack itemstack = ItemStack.EMPTY;
-            Optional<CraftingRecipe> optional = pLevel.getServer().getRecipeManager().getRecipeFor(RecipeType.CRAFTING, pContainer, pLevel);
-//            if (optional.isPresent()) {
-//                CraftingRecipe craftingrecipe = optional.get();
-//                if (pResult.setRecipeUsed(pLevel, serverplayer, craftingrecipe)) {
-//                    ItemStack itemstack1 = craftingrecipe.assemble(pContainer, pLevel.registryAccess());
-//                    if (itemstack1.isItemEnabled(pLevel.enabledFeatures())) {
-//                        itemstack = itemstack1;
-//                    }
-//                }
-//            }
+            Optional<SWCraftingRecipe> optional = pLevel.getServer().getRecipeManager().getRecipeFor(SCRecipeTypes.STACK_CRAFTING.get(), pContainer, pLevel);
+            if (optional.isPresent()) {
+                SWCraftingRecipe craftingrecipe = optional.get();
+                if (pResult.setRecipeUsed(pLevel, serverplayer, craftingrecipe)) {
+                    ItemStack itemstack1 = craftingrecipe.assemble(pContainer, pLevel.registryAccess());
+                    if (itemstack1.isItemEnabled(pLevel.enabledFeatures())) {
+                        itemstack = itemstack1;
+                    }
+                }
+            }
 
             pResult.setItem(0, itemstack);
             pMenu.setRemoteSlot(0, itemstack);
