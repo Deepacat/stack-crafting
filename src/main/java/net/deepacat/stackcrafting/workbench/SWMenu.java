@@ -41,7 +41,7 @@ public class SWMenu extends RecipeBookMenu<CraftingContainer> {
         super(SCMenuRegistry.SW_MENU.get(), pContainerId);
         this.access = pAccess;
         this.player = pPlayerInventory.player;
-        this.addSlot(new ResultSlot(pPlayerInventory.player, this.craftSlots, this.resultSlots, 0, 124, 35));
+        this.addSlot(new SWResultSlot(craftSlots, resultSlots, 0, 124, 35));
 
         for (int i = 0; i < 3; ++i) {
             for (int j = 0; j < 3; ++j) {
