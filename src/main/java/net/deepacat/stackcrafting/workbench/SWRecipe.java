@@ -10,6 +10,7 @@ import com.google.gson.JsonSyntaxException;
 import net.deepacat.stackcrafting.Registry.SCRecipeSerializer;
 import net.deepacat.stackcrafting.Registry.SCRecipeTypes;
 import net.deepacat.stackcrafting.StackCrafting;
+import net.deepacat.stackcrafting.workbench.recipebook.SWRecipeBookTab;
 import net.minecraft.core.NonNullList;
 import net.minecraft.core.RegistryAccess;
 import net.minecraft.core.registries.BuiltInRegistries;
@@ -26,6 +27,7 @@ import net.minecraftforge.common.ForgeHooks;
 import net.minecraftforge.common.crafting.CraftingHelper;
 import net.minecraftforge.common.crafting.IShapedRecipe;
 
+import javax.annotation.Nullable;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
@@ -39,7 +41,7 @@ public class SWRecipe implements IShapedRecipe<CraftingContainer> {
     final ItemStack result;
     private final ResourceLocation id;
     final String group;
-    final CraftingBookCategory category;
+    final SWRecipeBookTab category;
     final boolean showNotification;
 
     public static void setCraftingSize(int width, int height) {
@@ -53,7 +55,7 @@ public class SWRecipe implements IShapedRecipe<CraftingContainer> {
 
     }
 
-    public SWRecipe(ResourceLocation pId, String pGroup, CraftingBookCategory pCategory, int pWidth, int pHeight, NonNullList<Ingredient> pRecipeItems, ItemStack pResult, boolean pShowNotification) {
+    public SWRecipe(ResourceLocation pId, String pGroup, SWRecipeBookTab pCategory, int pWidth, int pHeight, NonNullList<Ingredient> pRecipeItems, ItemStack pResult, boolean pShowNotification) {
         this.id = pId;
         this.group = pGroup;
         this.category = pCategory;
@@ -64,7 +66,7 @@ public class SWRecipe implements IShapedRecipe<CraftingContainer> {
         this.showNotification = pShowNotification;
     }
 
-    public SWRecipe(ResourceLocation pId, String pGroup, CraftingBookCategory pCategory, int pWidth, int pHeight, NonNullList<Ingredient> pRecipeItems, ItemStack pResult) {
+    public SWRecipe(ResourceLocation pId, String pGroup, SWRecipeBookTab pCategory, int pWidth, int pHeight, NonNullList<Ingredient> pRecipeItems, ItemStack pResult) {
         this(pId, pGroup, pCategory, pWidth, pHeight, pRecipeItems, pResult, true);
     }
 
@@ -85,12 +87,13 @@ public class SWRecipe implements IShapedRecipe<CraftingContainer> {
         return this.group;
     }
 
-    public CraftingBookCategory category() {
-        return this.category;
-    }
-
     public ItemStack getResultItem(RegistryAccess pRegistryAccess) {
         return this.result;
+    }
+
+    @Nullable
+    public SWRecipeBookTab getRecipeBookTab() {
+        return this.category;
     }
 
     public NonNullList<Ingredient> getIngredients() {
@@ -319,7 +322,8 @@ public class SWRecipe implements IShapedRecipe<CraftingContainer> {
 
         public SWRecipe fromJson(ResourceLocation pRecipeId, JsonObject pJson) {
             String s = GsonHelper.getAsString(pJson, "group", "");
-            CraftingBookCategory craftingbookcategory = (CraftingBookCategory) CraftingBookCategory.CODEC.byName(GsonHelper.getAsString(pJson, "category", (String) null), CraftingBookCategory.MISC);
+            final String categoryKeyIn = GsonHelper.getAsString(pJson, "category", (String) null);
+            final SWRecipeBookTab keyIn = SWRecipeBookTab.findByName(categoryKeyIn);
             Map<String, Ingredient> map = keyFromJson(GsonHelper.getAsJsonObject(pJson, "key"));
             String[] astring = shrink(patternFromJson(GsonHelper.getAsJsonArray(pJson, "pattern")));
             int i = astring[0].length();
@@ -327,14 +331,14 @@ public class SWRecipe implements IShapedRecipe<CraftingContainer> {
             NonNullList<Ingredient> nonnulllist = dissolvePattern(astring, map, i, j);
             ItemStack itemstack = itemStackFromJson(GsonHelper.getAsJsonObject(pJson, "result"));
             boolean flag = GsonHelper.getAsBoolean(pJson, "show_notification", true);
-            return new SWRecipe(pRecipeId, s, craftingbookcategory, i, j, nonnulllist, itemstack, flag);
+            return new SWRecipe(pRecipeId, s, keyIn, i, j, nonnulllist, itemstack, flag);
         }
 
         public SWRecipe fromNetwork(ResourceLocation pRecipeId, FriendlyByteBuf pBuffer) {
             int i = pBuffer.readVarInt();
             int j = pBuffer.readVarInt();
             String s = pBuffer.readUtf();
-            CraftingBookCategory craftingbookcategory = (CraftingBookCategory) pBuffer.readEnum(CraftingBookCategory.class);
+            SWRecipeBookTab craftingbookcategory = SWRecipeBookTab.findByName(pBuffer.readUtf());
             NonNullList<Ingredient> nonnulllist = NonNullList.withSize(i * j, Ingredient.EMPTY);
 
             for (int k = 0; k < nonnulllist.size(); ++k) {

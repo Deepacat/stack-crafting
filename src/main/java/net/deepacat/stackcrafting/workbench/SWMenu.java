@@ -3,6 +3,7 @@ package net.deepacat.stackcrafting.workbench;
 import net.deepacat.stackcrafting.Registry.SCBlockRegistry;
 import net.deepacat.stackcrafting.Registry.SCMenuRegistry;
 import net.deepacat.stackcrafting.Registry.SCRecipeTypes;
+import net.deepacat.stackcrafting.StackCrafting;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.protocol.game.ClientboundContainerSetSlotPacket;
 import net.minecraft.server.level.ServerPlayer;
@@ -12,9 +13,7 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.player.StackedContents;
 import net.minecraft.world.inventory.*;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.crafting.CraftingRecipe;
 import net.minecraft.world.item.crafting.Recipe;
-import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.level.Level;
 
 import java.util.Optional;
@@ -202,7 +201,7 @@ public class SWMenu extends RecipeBookMenu<CraftingContainer> {
     }
 
     public RecipeBookType getRecipeBookType() {
-        return RecipeBookType.CRAFTING;
+        return StackCrafting.STACK_CRAFTING_RECIPE;
     }
 
     public boolean shouldMoveToInventory(int pSlotIndex) {
