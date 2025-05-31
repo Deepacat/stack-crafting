@@ -2,14 +2,11 @@ package net.deepacat.stackcrafting;
 
 import net.deepacat.stackcrafting.Registry.*;
 import net.deepacat.stackcrafting.workbench.SWScreen;
-import net.deepacat.stackcrafting.workbench.recipebook.SWRecipeCategory;
 import net.minecraft.client.gui.screens.MenuScreens;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.inventory.RecipeBookType;
-import net.minecraftforge.client.event.RegisterRecipeBookCategoriesEvent;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.eventbus.api.IEventBus;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 import net.minecraftforge.fml.event.lifecycle.FMLLoadCompleteEvent;

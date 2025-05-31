@@ -1,5 +1,6 @@
-package net.deepacat.stackcrafting;
+package net.deepacat.stackcrafting.events;
 
+import net.deepacat.stackcrafting.StackCrafting;
 import net.deepacat.stackcrafting.workbench.recipebook.SWRecipeCategory;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.client.event.RegisterRecipeBookCategoriesEvent;

@@ -24,6 +24,7 @@ import javax.annotation.Nullable;
 import java.util.*;
 import java.util.stream.Stream;
 
+// Class "borrowed" from PNC:R
 public class StackedIngredient extends Ingredient {
     public static final StackedIngredient EMPTY = new StackedIngredient(Stream.empty());
 
@@ -90,7 +91,7 @@ public class StackedIngredient extends Ingredient {
 
     public static class Serializer implements IIngredientSerializer<StackedIngredient> {
         public static final Serializer INSTANCE = new Serializer();
-        public static final ResourceLocation ID = new ResourceLocation(StackCrafting.MODID + "stacked_item");
+        public static final ResourceLocation ID = new ResourceLocation(StackCrafting.MODID, "stacked_item");
 
         @Override
         public StackedIngredient parse(FriendlyByteBuf buffer) {
