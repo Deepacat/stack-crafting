@@ -1,7 +1,5 @@
 package net.deepacat.stackcrafting.workbench.recipebook;
 
-import vectorwing.farmersdelight.client.recipebook.CookingPotRecipeBookTab;
-
 public enum SWRecipeBookTab {
     EQUIPMENT("equipment"),
     BUILDING("building"),

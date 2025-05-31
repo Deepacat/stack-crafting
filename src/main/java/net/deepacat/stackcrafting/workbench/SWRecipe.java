@@ -44,16 +44,16 @@ public class SWRecipe implements IShapedRecipe<CraftingContainer> {
     final SWRecipeBookTab category;
     final boolean showNotification;
 
-    public static void setCraftingSize(int width, int height) {
-        if (MAX_WIDTH < width) {
-            MAX_WIDTH = width;
-        }
-
-        if (MAX_HEIGHT < height) {
-            MAX_HEIGHT = height;
-        }
-
-    }
+//    public static void setCraftingSize(int width, int height) {
+//        if (MAX_WIDTH < width) {
+//            MAX_WIDTH = width;
+//        }
+//
+//        if (MAX_HEIGHT < height) {
+//            MAX_HEIGHT = height;
+//        }
+//
+//    }
 
     public SWRecipe(ResourceLocation pId, String pGroup, SWRecipeBookTab pCategory, int pWidth, int pHeight, NonNullList<Ingredient> pRecipeItems, ItemStack pResult, boolean pShowNotification) {
         this.id = pId;
@@ -66,9 +66,9 @@ public class SWRecipe implements IShapedRecipe<CraftingContainer> {
         this.showNotification = pShowNotification;
     }
 
-    public SWRecipe(ResourceLocation pId, String pGroup, SWRecipeBookTab pCategory, int pWidth, int pHeight, NonNullList<Ingredient> pRecipeItems, ItemStack pResult) {
-        this(pId, pGroup, pCategory, pWidth, pHeight, pRecipeItems, pResult, true);
-    }
+//    public SWRecipe(ResourceLocation pId, String pGroup, SWRecipeBookTab pCategory, int pWidth, int pHeight, NonNullList<Ingredient> pRecipeItems, ItemStack pResult) {
+//        this(pId, pGroup, pCategory, pWidth, pHeight, pRecipeItems, pResult, true);
+//    }
 
     public ResourceLocation getId() {
         return this.id;

@@ -1,6 +1,6 @@
 {
   "type": "stackcrafting:stack_crafting",
-  "category": "equipment",
+  "category": "misc",
   "key": {
     "#": {
       "item": "minecraft:iron_ingot"
