@@ -9,6 +9,7 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonSyntaxException;
 import net.deepacat.stackcrafting.Registry.SCRecipeSerializer;
 import net.deepacat.stackcrafting.Registry.SCRecipeTypes;
+import net.deepacat.stackcrafting.Registry.StackedIngredient;
 import net.deepacat.stackcrafting.StackCrafting;
 import net.deepacat.stackcrafting.workbench.recipebook.SWRecipeBookTab;
 import net.minecraft.core.NonNullList;
@@ -37,25 +38,14 @@ public class SWRecipe implements IShapedRecipe<CraftingContainer> {
     static int MAX_HEIGHT = 3;
     final int width;
     final int height;
-    final NonNullList<Ingredient> recipeItems;
+    final NonNullList<StackedIngredient> recipeItems;
     final ItemStack result;
     private final ResourceLocation id;
     final String group;
     final SWRecipeBookTab category;
-    final boolean showNotification;
 
-//    public static void setCraftingSize(int width, int height) {
-//        if (MAX_WIDTH < width) {
-//            MAX_WIDTH = width;
-//        }
-//
-//        if (MAX_HEIGHT < height) {
-//            MAX_HEIGHT = height;
-//        }
-//
-//    }
-
-    public SWRecipe(ResourceLocation pId, String pGroup, SWRecipeBookTab pCategory, int pWidth, int pHeight, NonNullList<Ingredient> pRecipeItems, ItemStack pResult, boolean pShowNotification) {
+    public SWRecipe(ResourceLocation pId, String pGroup, SWRecipeBookTab pCategory, int pWidth, int pHeight,
+                    NonNullList<StackedIngredient> pRecipeItems, ItemStack pResult) {
         this.id = pId;
         this.group = pGroup;
         this.category = pCategory;
@@ -63,12 +53,7 @@ public class SWRecipe implements IShapedRecipe<CraftingContainer> {
         this.height = pHeight;
         this.recipeItems = pRecipeItems;
         this.result = pResult;
-        this.showNotification = pShowNotification;
     }
-
-//    public SWRecipe(ResourceLocation pId, String pGroup, SWRecipeBookTab pCategory, int pWidth, int pHeight, NonNullList<Ingredient> pRecipeItems, ItemStack pResult) {
-//        this(pId, pGroup, pCategory, pWidth, pHeight, pRecipeItems, pResult, true);
-//    }
 
     public ResourceLocation getId() {
         return this.id;
@@ -96,26 +81,23 @@ public class SWRecipe implements IShapedRecipe<CraftingContainer> {
         return this.category;
     }
 
+    @SuppressWarnings("unchecked")
     public NonNullList<Ingredient> getIngredients() {
-        return this.recipeItems;
-    }
-
-    public boolean showNotification() {
-        return this.showNotification;
+        return (NonNullList<Ingredient>) (NonNullList<?>) this.recipeItems;
     }
 
     public boolean canCraftInDimensions(int pWidth, int pHeight) {
         return pWidth >= this.width && pHeight >= this.height;
     }
 
-    public boolean matches(CraftingContainer pInv, Level pLevel) {
-        for (int i = 0; i <= pInv.getWidth() - this.width; ++i) {
-            for (int j = 0; j <= pInv.getHeight() - this.height; ++j) {
-                if (this.matches(pInv, i, j, true)) {
+    public boolean matches(CraftingContainer inv, Level level) {
+        for (int i = 0; i <= inv.getWidth() - this.width; ++i) {
+            for (int j = 0; j <= inv.getHeight() - this.height; ++j) {
+                if (this.matches(inv, i, j, true)) {
                     return true;
                 }
 
-                if (this.matches(pInv, i, j, false)) {
+                if (this.matches(inv, i, j, false)) {
                     return true;
                 }
             }
@@ -167,29 +149,23 @@ public class SWRecipe implements IShapedRecipe<CraftingContainer> {
         return this.getHeight();
     }
 
-    static NonNullList<Ingredient> dissolvePattern(String[] pPattern, Map<String, Ingredient> pKeys, int pPatternWidth, int pPatternHeight) {
-        NonNullList<Ingredient> nonnulllist = NonNullList.withSize(pPatternWidth * pPatternHeight, Ingredient.EMPTY);
-        Set<String> set = Sets.newHashSet(pKeys.keySet());
-        set.remove(" ");
-
-        for (int i = 0; i < pPattern.length; ++i) {
-            for (int j = 0; j < pPattern[i].length(); ++j) {
-                String s = pPattern[i].substring(j, j + 1);
-                Ingredient ingredient = (Ingredient) pKeys.get(s);
-                if (ingredient == null) {
-                    throw new JsonSyntaxException("Pattern references symbol '" + s + "' but it's not defined in the key");
-                }
-
-                set.remove(s);
-                nonnulllist.set(j + pPatternWidth * i, ingredient);
+    static NonNullList<StackedIngredient> dissolvePattern(String[] pattern, Map<String, StackedIngredient> keyMap, int width, int height) {
+        NonNullList<StackedIngredient> result = NonNullList.withSize(width * height, StackedIngredient.EMPTY);
+        Set<String> unusedKeys = Sets.newHashSet(keyMap.keySet());
+        unusedKeys.remove(" ");
+        for (int i = 0; i < pattern.length; ++i) {
+            for (int j = 0; j < pattern[i].length(); ++j) {
+                String key = pattern[i].substring(j, j + 1);
+                StackedIngredient ingredient = keyMap.get(key);
+                if (ingredient == null)
+                    throw new JsonSyntaxException("Pattern references symbol '" + key + "' but it's not defined in the key");
+                unusedKeys.remove(key);
+                result.set(j + width * i, ingredient);
             }
         }
-
-        if (!set.isEmpty()) {
-            throw new JsonSyntaxException("Key defines symbols that aren't used in pattern: " + set);
-        } else {
-            return nonnulllist;
-        }
+        if (!unusedKeys.isEmpty())
+            throw new JsonSyntaxException("Key defines symbols that aren't used in pattern: " + unusedKeys);
+        return result;
     }
 
     @VisibleForTesting
@@ -277,24 +253,18 @@ public class SWRecipe implements IShapedRecipe<CraftingContainer> {
         }
     }
 
-    static Map<String, Ingredient> keyFromJson(JsonObject pKeyEntry) {
-        Map<String, Ingredient> map = Maps.newHashMap();
-        Iterator var2 = pKeyEntry.entrySet().iterator();
-
-        while (var2.hasNext()) {
-            Map.Entry<String, JsonElement> entry = (Map.Entry) var2.next();
-            if (((String) entry.getKey()).length() != 1) {
-                throw new JsonSyntaxException("Invalid key entry: '" + (String) entry.getKey() + "' is an invalid symbol (must be 1 character only).");
-            }
-
-            if (" ".equals(entry.getKey())) {
+    static Map<String, StackedIngredient> keyFromJson(JsonObject keyJson) {
+        Map<String, StackedIngredient> map = Maps.newHashMap();
+        for (Map.Entry<String, JsonElement> entry : keyJson.entrySet()) {
+            if ((entry.getKey()).length() != 1)
+                throw new JsonSyntaxException("Invalid key entry: '" + entry.getKey() + "' is an invalid symbol (must be 1 character only).");
+            if (" ".equals(entry.getKey()))
                 throw new JsonSyntaxException("Invalid key entry: ' ' is a reserved symbol.");
-            }
-
-            map.put((String) entry.getKey(), Ingredient.fromJson((JsonElement) entry.getValue(), false));
+            // TODO: validate non-empty.
+            map.put(entry.getKey(), StackedIngredient.Serializer.INSTANCE.parse((JsonObject) entry.getValue()));
         }
 
-        map.put(" ", Ingredient.EMPTY);
+        map.put(" ", StackedIngredient.EMPTY);
         return map;
     }
 
@@ -324,14 +294,13 @@ public class SWRecipe implements IShapedRecipe<CraftingContainer> {
             String s = GsonHelper.getAsString(pJson, "group", "");
             final String categoryKeyIn = GsonHelper.getAsString(pJson, "category", (String) null);
             final SWRecipeBookTab keyIn = SWRecipeBookTab.findByName(categoryKeyIn);
-            Map<String, Ingredient> map = keyFromJson(GsonHelper.getAsJsonObject(pJson, "key"));
+            Map<String, StackedIngredient> map = keyFromJson(GsonHelper.getAsJsonObject(pJson, "key"));
             String[] astring = shrink(patternFromJson(GsonHelper.getAsJsonArray(pJson, "pattern")));
             int i = astring[0].length();
             int j = astring.length;
-            NonNullList<Ingredient> nonnulllist = dissolvePattern(astring, map, i, j);
+            NonNullList<StackedIngredient> nonnulllist = dissolvePattern(astring, map, i, j);
             ItemStack itemstack = itemStackFromJson(GsonHelper.getAsJsonObject(pJson, "result"));
-            boolean flag = GsonHelper.getAsBoolean(pJson, "show_notification", true);
-            return new SWRecipe(pRecipeId, s, keyIn, i, j, nonnulllist, itemstack, flag);
+            return new SWRecipe(pRecipeId, s, keyIn, i, j, nonnulllist, itemstack);
         }
 
         public SWRecipe fromNetwork(ResourceLocation pRecipeId, FriendlyByteBuf pBuffer) {
@@ -339,15 +308,14 @@ public class SWRecipe implements IShapedRecipe<CraftingContainer> {
             int j = pBuffer.readVarInt();
             String s = pBuffer.readUtf();
             SWRecipeBookTab craftingbookcategory = SWRecipeBookTab.findByName(pBuffer.readUtf());
-            NonNullList<Ingredient> nonnulllist = NonNullList.withSize(i * j, Ingredient.EMPTY);
+            NonNullList<StackedIngredient> nonnulllist = NonNullList.withSize(i * j, StackedIngredient.EMPTY);
 
             for (int k = 0; k < nonnulllist.size(); ++k) {
-                nonnulllist.set(k, Ingredient.fromNetwork(pBuffer));
+                nonnulllist.set(k, StackedIngredient.Serializer.INSTANCE.parse(pBuffer));
             }
 
             ItemStack itemstack = pBuffer.readItem();
-            boolean flag = pBuffer.readBoolean();
-            return new SWRecipe(pRecipeId, s, craftingbookcategory, i, j, nonnulllist, itemstack, flag);
+            return new SWRecipe(pRecipeId, s, craftingbookcategory, i, j, nonnulllist, itemstack);
         }
 
         public void toNetwork(FriendlyByteBuf pBuffer, SWRecipe pRecipe) {
@@ -363,7 +331,6 @@ public class SWRecipe implements IShapedRecipe<CraftingContainer> {
             }
 
             pBuffer.writeItem(pRecipe.result);
-            pBuffer.writeBoolean(pRecipe.showNotification);
         }
     }
 }

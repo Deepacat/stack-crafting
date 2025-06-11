@@ -3,13 +3,16 @@
   "category": "misc",
   "key": {
     "#": {
-      "item": "minecraft:iron_ingot"
+      "item": "minecraft:iron_ingot",
+      "count": 3
     },
     "X": {
-      "item": "minecraft:gold_ingot"
+      "item": "minecraft:gold_ingot",
+      "count": 4
     },
     "Y": {
-      "item": "minecraft:dirt"
+      "item": "minecraft:dirt",
+      "count": 5
     }
   },
   "pattern": [
@@ -20,6 +23,5 @@
   "result": {
     "count": 7,
     "item": "minecraft:diamond"
-  },
-  "show_notification": true
+  }
 }
