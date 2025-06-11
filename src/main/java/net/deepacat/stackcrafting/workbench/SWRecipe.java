@@ -14,14 +14,11 @@ import net.deepacat.stackcrafting.StackCrafting;
 import net.deepacat.stackcrafting.workbench.recipebook.SWRecipeBookTab;
 import net.minecraft.core.NonNullList;
 import net.minecraft.core.RegistryAccess;
-import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.GsonHelper;
 import net.minecraft.world.inventory.CraftingContainer;
-import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.Items;
 import net.minecraft.world.item.crafting.*;
 import net.minecraft.world.level.Level;
 import net.minecraftforge.common.ForgeHooks;
@@ -269,18 +266,6 @@ public class SWRecipe implements IShapedRecipe<CraftingContainer> {
 
     public static ItemStack itemStackFromJson(JsonObject pStackObject) {
         return CraftingHelper.getItemStack(pStackObject, true, true);
-    }
-
-    public static Item itemFromJson(JsonObject pItemObject) {
-        String s = GsonHelper.getAsString(pItemObject, "item");
-        Item item = (Item) BuiltInRegistries.ITEM.getOptional(ResourceLocation.tryParse(s)).orElseThrow(() -> {
-            return new JsonSyntaxException("Unknown item '" + s + "'");
-        });
-        if (item == Items.AIR) {
-            throw new JsonSyntaxException("Empty ingredient not allowed here");
-        } else {
-            return item;
-        }
     }
 
     public static class Serializer implements RecipeSerializer<SWRecipe> {

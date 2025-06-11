@@ -14,10 +14,8 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.item.crafting.ShapedRecipe;
-import net.minecraft.world.level.ItemLike;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraftforge.common.crafting.IIngredientSerializer;
-import net.minecraftforge.items.ItemHandlerHelper;
 import net.minecraftforge.registries.ForgeRegistries;
 
 import javax.annotation.Nullable;
@@ -30,26 +28,6 @@ public class StackedIngredient extends Ingredient {
 
     private StackedIngredient(Stream<? extends Value> itemLists) {
         super(itemLists);
-    }
-
-    public static Ingredient fromTag(TagKey<Item> tag, int count) {
-        return StackedIngredient.fromItemListStream(Stream.of(new StackedTagList(tag, count)));
-    }
-
-    public static Ingredient fromStacks(ItemStack... stacks) {
-        return fromItemListStream(Arrays.stream(stacks).map(StackedItemList::new));
-    }
-
-    public static Ingredient fromItems(int count, ItemLike... itemsIn) {
-        return fromItemListStream(Arrays.stream(itemsIn).map((itemProvider) -> new StackedItemList(new ItemStack(itemProvider, count))));
-    }
-
-    public static Ingredient fromIngredient(int count, Ingredient wrappedIngredient) {
-        List<ItemStack> l = new ArrayList<>();
-        for (ItemStack stack : wrappedIngredient.getItems()) {
-            l.add(ItemHandlerHelper.copyStackWithSize(stack, count));
-        }
-        return fromStacks(l.toArray(new ItemStack[0]));
     }
 
     public static StackedIngredient fromItemListStream(Stream<? extends Ingredient.Value> stream) {
@@ -105,28 +83,12 @@ public class StackedIngredient extends Ingredient {
 
         @Override
         public void write(FriendlyByteBuf buffer, StackedIngredient ingredient) {
+            // TODO: preserve StackedTagList?
             ItemStack[] items = ingredient.getItems();
             buffer.writeVarInt(items.length);
 
             for (ItemStack stack : items)
                 buffer.writeItem(stack);
-        }
-    }
-
-    public record StackedItemList(ItemStack itemStack) implements Value {
-        @Override
-        public Collection<ItemStack> getItems() {
-            return Collections.singletonList(itemStack);
-        }
-
-        @Override
-        public JsonObject serialize() {
-            JsonObject json = new JsonObject();
-            json.addProperty("type", Serializer.ID.toString());
-            ResourceLocation rl = ForgeRegistries.ITEMS.getKey(itemStack.getItem());
-            json.addProperty("item", rl == null ? "" : rl.toString());
-            json.addProperty("count", itemStack.getCount());
-            return json;
         }
     }
 
