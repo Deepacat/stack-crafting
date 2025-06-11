@@ -91,13 +91,13 @@ public class SWRecipe implements IShapedRecipe<CraftingContainer> {
     }
 
     public boolean matches(CraftingContainer inv, Level level) {
-        for (int i = 0; i <= inv.getWidth() - this.width; ++i) {
-            for (int j = 0; j <= inv.getHeight() - this.height; ++j) {
-                if (this.matches(inv, i, j, true)) {
+        for (int baseX = 0; baseX <= inv.getWidth() - this.width; ++baseX) {
+            for (int baseY = 0; baseY <= inv.getHeight() - this.height; ++baseY) {
+                if (this.matches(inv, baseX, baseY, true)) {
                     return true;
                 }
 
-                if (this.matches(inv, i, j, false)) {
+                if (this.matches(inv, baseX, baseY, false)) {
                     return true;
                 }
             }
@@ -106,21 +106,20 @@ public class SWRecipe implements IShapedRecipe<CraftingContainer> {
         return false;
     }
 
-    private boolean matches(CraftingContainer pCraftingInventory, int pWidth, int pHeight, boolean pMirrored) {
-        for (int i = 0; i < pCraftingInventory.getWidth(); ++i) {
-            for (int j = 0; j < pCraftingInventory.getHeight(); ++j) {
-                int k = i - pWidth;
-                int l = j - pHeight;
+    boolean matches(CraftingContainer pCraftingInventory, int baseX, int baseY, boolean mirrored) {
+        for (int absX = 0; absX < pCraftingInventory.getWidth(); ++absX) {
+            for (int absY = 0; absY < pCraftingInventory.getHeight(); ++absY) {
+                int relX = absX - baseX;
+                int relY = absY - baseY;
                 Ingredient ingredient = Ingredient.EMPTY;
-                if (k >= 0 && l >= 0 && k < this.width && l < this.height) {
-                    if (pMirrored) {
-                        ingredient = (Ingredient) this.recipeItems.get(this.width - k - 1 + l * this.width);
+                if (relX >= 0 && relY >= 0 && relX < this.width && relY < this.height) {
+                    if (mirrored) {
+                        ingredient = recipeItems.get(this.width - relX - 1 + relY * this.width);
                     } else {
-                        ingredient = (Ingredient) this.recipeItems.get(k + l * this.width);
+                        ingredient = recipeItems.get(relX + relY * this.width);
                     }
                 }
-
-                if (!ingredient.test(pCraftingInventory.getItem(i + j * pCraftingInventory.getWidth()))) {
+                if (!ingredient.test(pCraftingInventory.getItem(absX + absY * pCraftingInventory.getWidth()))) {
                     return false;
                 }
             }
