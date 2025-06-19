@@ -17,6 +17,7 @@ import net.minecraft.core.RegistryAccess;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.GsonHelper;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.CraftingContainer;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.*;
@@ -24,8 +25,9 @@ import net.minecraft.world.level.Level;
 import net.minecraftforge.common.ForgeHooks;
 import net.minecraftforge.common.crafting.CraftingHelper;
 import net.minecraftforge.common.crafting.IShapedRecipe;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
-import javax.annotation.Nullable;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
@@ -79,7 +81,7 @@ public class SWRecipe implements IShapedRecipe<CraftingContainer> {
     }
 
     @SuppressWarnings("unchecked")
-    public NonNullList<Ingredient> getIngredients() {
+    public @NotNull NonNullList<Ingredient> getIngredients() {
         return (NonNullList<Ingredient>) (NonNullList<?>) this.recipeItems;
     }
 
@@ -87,46 +89,74 @@ public class SWRecipe implements IShapedRecipe<CraftingContainer> {
         return pWidth >= this.width && pHeight >= this.height;
     }
 
-    public boolean matches(CraftingContainer inv, Level level) {
-        for (int baseX = 0; baseX <= inv.getWidth() - this.width; ++baseX) {
-            for (int baseY = 0; baseY <= inv.getHeight() - this.height; ++baseY) {
-                if (this.matches(inv, baseX, baseY, true)) {
-                    return true;
-                }
+    private record Offset(int baseX, int baseY, boolean mirrored) {}
 
-                if (this.matches(inv, baseX, baseY, false)) {
-                    return true;
-                }
-            }
-        }
-
-        return false;
+    private interface SlotAcceptor {
+        boolean accept(Ingredient ingredient, int slotIdx);
     }
 
-    boolean matches(CraftingContainer pCraftingInventory, int baseX, int baseY, boolean mirrored) {
-        for (int absX = 0; absX < pCraftingInventory.getWidth(); ++absX) {
-            for (int absY = 0; absY < pCraftingInventory.getHeight(); ++absY) {
-                int relX = absX - baseX;
-                int relY = absY - baseY;
+    private boolean iterateSlots(Offset offset, CraftingContainer inputSlots, SlotAcceptor acceptor) {
+        for (int absX = 0; absX < inputSlots.getWidth(); ++absX) {
+            for (int absY = 0; absY < inputSlots.getHeight(); ++absY) {
+                int relX = absX - offset.baseX;
+                int relY = absY - offset.baseY;
                 Ingredient ingredient = Ingredient.EMPTY;
                 if (relX >= 0 && relY >= 0 && relX < this.width && relY < this.height) {
-                    if (mirrored) {
+                    if (offset.mirrored) {
                         ingredient = recipeItems.get(this.width - relX - 1 + relY * this.width);
                     } else {
                         ingredient = recipeItems.get(relX + relY * this.width);
                     }
                 }
-                if (!ingredient.test(pCraftingInventory.getItem(absX + absY * pCraftingInventory.getWidth()))) {
-                    return false;
-                }
+                if (!acceptor.accept(ingredient, absX + absY * inputSlots.getWidth())) return false;
             }
         }
-
         return true;
     }
 
-    public ItemStack assemble(CraftingContainer pContainer, RegistryAccess pRegistryAccess) {
-        return this.getResultItem(pRegistryAccess).copy();
+    public boolean matchAndMaybeConsume(CraftingContainer inputSlots, @Nullable Player toConsume) {
+        for (int baseX = 0; baseX <= inputSlots.getWidth() - width; ++baseX) {
+            for (int baseY = 0; baseY <= inputSlots.getHeight() - height; ++baseY) {
+                if (matchAndMaybeConsume(new Offset(baseX, baseY, true), inputSlots, toConsume))
+                    return true;
+                if (matchAndMaybeConsume(new Offset(baseX, baseY, false), inputSlots, toConsume))
+                    return true;
+            }
+        }
+        return false;
+    }
+
+    private boolean matchAndMaybeConsume(Offset offset, CraftingContainer inputSlots, @Nullable Player toConsume) {
+        boolean okay = iterateSlots(offset, inputSlots, (ingredient, slotIdx) -> ingredient.test(inputSlots.getItem(slotIdx)));
+        if (okay && toConsume != null) {
+            iterateSlots(offset, inputSlots, (ingredient, slotIdx) -> {
+                if (ingredient.isEmpty()) return true;
+                int count = ingredient.getItems()[0].getCount();
+                ItemStack slot = inputSlots.getItem(slotIdx);
+                ItemStack junk = slot.getCraftingRemainingItem();
+                inputSlots.removeItem(slotIdx, count);
+                slot = inputSlots.getItem(slotIdx);
+                if (junk.isEmpty()) return true;
+                if (slot.isEmpty()) {
+                    inputSlots.setItem(slotIdx, junk);
+                } else if (ItemStack.isSameItemSameTags(slot, junk)) {
+                    junk.grow(slot.getCount());
+                    inputSlots.setItem(slotIdx, junk);
+                } else {
+                    toConsume.drop(junk, false);
+                }
+                return true;
+            });
+        }
+        return okay;
+    }
+
+    public boolean matches(@NotNull CraftingContainer inputSlots, @NotNull Level level) {
+        return matchAndMaybeConsume(inputSlots, null);
+    }
+
+    public @NotNull ItemStack assemble(@NotNull CraftingContainer inputSlots, @NotNull RegistryAccess regAccess) {
+        return this.getResultItem(regAccess).copy();
     }
 
     public int getWidth() {
