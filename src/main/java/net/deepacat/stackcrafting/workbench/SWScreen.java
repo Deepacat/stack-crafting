@@ -1,5 +1,6 @@
 package net.deepacat.stackcrafting.workbench;
 
+import net.deepacat.stackcrafting.workbench.recipebook.SWRecipeBookComponent;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.ImageButton;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
@@ -14,7 +15,7 @@ import net.minecraft.world.inventory.Slot;
 public class SWScreen extends AbstractContainerScreen<SWMenu> implements RecipeUpdateListener {
     private static final ResourceLocation CRAFTING_TABLE_LOCATION = new ResourceLocation("textures/gui/container/crafting_table.png");
     private static final ResourceLocation RECIPE_BUTTON_LOCATION = new ResourceLocation("textures/gui/recipe_button.png");
-    private final RecipeBookComponent recipeBookComponent = new RecipeBookComponent();
+    private final RecipeBookComponent recipeBookComponent = new SWRecipeBookComponent();
     private boolean widthTooNarrow;
 
     public SWScreen(SWMenu pMenu, Inventory pPlayerInventory, Component pTitle) {
