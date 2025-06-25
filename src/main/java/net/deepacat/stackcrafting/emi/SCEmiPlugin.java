@@ -8,6 +8,7 @@ import dev.emi.emi.api.render.EmiTexture;
 import dev.emi.emi.api.stack.EmiStack;
 import net.deepacat.stackcrafting.StackCrafting;
 import net.deepacat.stackcrafting.registry.SCBlockRegistry;
+import net.deepacat.stackcrafting.registry.SCMenuRegistry;
 import net.deepacat.stackcrafting.registry.SCRecipeTypes;
 import net.deepacat.stackcrafting.workbench.SWRecipe;
 import net.minecraft.resources.ResourceLocation;
@@ -22,6 +23,8 @@ public class SCEmiPlugin implements EmiPlugin {
     public void register(EmiRegistry emiRegistry) {
         emiRegistry.addCategory(STACK_CRAFTING);
         emiRegistry.addWorkstation(STACK_CRAFTING, STACK_WORKBENCH);
+        emiRegistry.addRecipeHandler(SCMenuRegistry.SW_MENU.get(), new SWEmiRecipeHandler());
+
 
         RecipeManager manager = emiRegistry.getRecipeManager();
 
