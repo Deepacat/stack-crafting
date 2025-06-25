@@ -1,5 +1,6 @@
 package net.deepacat.stackcrafting.emi;
 
+import com.google.common.collect.Lists;
 import dev.emi.emi.api.recipe.EmiRecipe;
 import dev.emi.emi.api.recipe.EmiRecipeCategory;
 import dev.emi.emi.api.render.EmiTexture;
@@ -9,17 +10,16 @@ import dev.emi.emi.api.widget.WidgetHolder;
 import net.deepacat.stackcrafting.workbench.SWRecipe;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
-
 import java.util.List;
 
 public class SWEmiRecipe implements EmiRecipe {
     protected final ResourceLocation id;
-    protected final List<EmiIngredient> input;
+    protected final List<EmiIngredient> inputs;
     protected final EmiStack output;
 
     public SWEmiRecipe(SWRecipe recipe) {
         this.id = recipe.getId();
-        this.input = List.of(EmiIngredient.of(recipe.getIngredients().get(0)));
+        this.inputs = padIngredients(recipe);
         this.output = EmiStack.of(recipe.getResultItem());
     }
 
@@ -35,7 +35,7 @@ public class SWEmiRecipe implements EmiRecipe {
 
     @Override
     public List<EmiIngredient> getInputs() {
-        return input;
+        return inputs;
     }
 
     @Override
@@ -54,13 +54,13 @@ public class SWEmiRecipe implements EmiRecipe {
     }
 
     public boolean canFit(int width, int height) {
-        if (input.size() > 9) {
+        if (inputs.size() > 9) {
             return false;
         }
-        for (int i = 0; i < input.size(); i++) {
+        for (int i = 0; i < inputs.size(); i++) {
             int x = i % 3;
             int y = i / 3;
-            if (!input.get(i).isEmpty() && (x >= width || y >= height)) {
+            if (!inputs.get(i).isEmpty() && (x >= width || y >= height)) {
                 return false;
             }
         }
@@ -79,12 +79,27 @@ public class SWEmiRecipe implements EmiRecipe {
         }
         for (int i = 0; i < 9; i++) {
             int s = i + sOff;
-            if (s >= 0 && s < input.size()) {
-                widgets.addSlot(input.get(s), i % 3 * 18, i / 3 * 18);
+            if (s >= 0 && s < inputs.size()) {
+                widgets.addSlot(inputs.get(s), i % 3 * 18, i / 3 * 18);
             } else {
                 widgets.addSlot(EmiStack.of(ItemStack.EMPTY), i % 3 * 18, i / 3 * 18);
             }
         }
         widgets.addSlot(output, 92, 14).large(true).recipeContext(this);
+    }
+
+    private static List<EmiIngredient> padIngredients(SWRecipe recipe) {
+        List<EmiIngredient> list = Lists.newArrayList();
+        int i = 0;
+        for (int y = 0; y < 3; y++) {
+            for (int x = 0; x < 3; x++) {
+                if (x >= recipe.getWidth() || y >= recipe.getHeight() || i >= recipe.getIngredients().size()) {
+                    list.add(EmiStack.EMPTY);
+                } else {
+                    list.add(EmiIngredient.of(recipe.getIngredients().get(i++)));
+                }
+            }
+        }
+        return list;
     }
 }
