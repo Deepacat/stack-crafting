@@ -1,7 +1,7 @@
 package net.deepacat.stackcrafting.workbench;
 
-import net.deepacat.stackcrafting.Registry.SCRecipeTypes;
-import net.deepacat.stackcrafting.Registry.StackedIngredient;
+import net.deepacat.stackcrafting.registry.SCRecipeTypes;
+import net.deepacat.stackcrafting.registry.StackedIngredient;
 import net.minecraft.world.Container;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.CraftingContainer;

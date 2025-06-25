@@ -32,7 +32,7 @@ mixin {
     debug.export = true
 }
 
-version = "${minecraft_version}-1.2.0"
+version = "${minecraft_version}-1.0.0"
 
 group = 'net.deepacat.stackcrafting' // http://maven.apache.org/guides/mini/guide-naming-conventions.html
 archivesBaseName = 'stackcrafting'
@@ -162,7 +162,6 @@ sourceSets.main.resources { srcDir 'src/generated/resources' }
 repositories {
     maven { url = "https://api.modrinth.com/maven" }
     maven { url = "https://maven.firstdarkdev.xyz/snapshots" }
-    maven { url = "https://maven.terraformersmc.com/releases/" }
     maven { url = "https://maven.saps.dev/minecraft"; content { includeGroup "dev.latvian.mods" } }
     maven { url = "https://jitpack.io" }
     maven { url = "https://modmaven.dev" }
@@ -191,6 +190,10 @@ repositories {
             includeGroup 'com.gregtechceu.gtceu'
         }
     }
+    maven {
+        name = "TerraformersMC"
+        url = "https://maven.terraformersmc.com/"
+    }
 }
 
 dependencies {
@@ -204,15 +207,12 @@ dependencies {
 
     /* other minecraft dependencies are here */
 
-    // compile against the JEI API but do not include it at runtime
-    compileOnly(fg.deobf("mezz.jei:jei-${minecraft_version}-common-api:${jei_version}"))
-    compileOnly(fg.deobf("mezz.jei:jei-${minecraft_version}-forge-api:${jei_version}"))
-    // at runtime, use the full JEI jar for Forge
-    runtimeOnly(fg.deobf("mezz.jei:jei-${minecraft_version}-forge:${jei_version}"))
-    runtimeOnly(fg.deobf("dev.emi:emi-forge:1.1.18+${minecraft_version}"))
+    compileOnly fg.deobf("dev.emi:emi-forge:${emi_version}:api")
+    runtimeOnly fg.deobf("dev.emi:emi-forge:${emi_version}")
+    compileOnly "dev.emi:emi-xplat-mojmap:${emi_version}:api"
 
     implementation fg.deobf("curse.maven:jade-324717:5390389")
-    implementation fg.deobf("curse.maven:farmers-delight-398521:6154802")
+    runtimeOnly fg.deobf("curse.maven:farmers-delight-398521:6154802")
 
     implementation fg.deobf("dev.toma.configuration:configuration-forge-${minecraft_version}:2.2.0")
 

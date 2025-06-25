@@ -2,7 +2,7 @@ package net.deepacat.stackcrafting.workbench.recipebook;
 
 import com.google.common.base.Suppliers;
 import com.google.common.collect.ImmutableList;
-import net.deepacat.stackcrafting.Registry.SCRecipeTypes;
+import net.deepacat.stackcrafting.registry.SCRecipeTypes;
 import net.deepacat.stackcrafting.StackCrafting;
 import net.deepacat.stackcrafting.workbench.SWRecipe;
 import net.minecraft.client.RecipeBookCategories;

@@ -1,4 +1,4 @@
-package net.deepacat.stackcrafting.Registry;
+package net.deepacat.stackcrafting.registry;
 
 import com.google.common.collect.Lists;
 import com.google.gson.JsonObject;

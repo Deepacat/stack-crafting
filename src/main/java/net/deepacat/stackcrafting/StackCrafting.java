@@ -1,6 +1,6 @@
 package net.deepacat.stackcrafting;
 
-import net.deepacat.stackcrafting.Registry.*;
+import net.deepacat.stackcrafting.registry.*;
 import net.deepacat.stackcrafting.workbench.SWScreen;
 import net.minecraft.client.gui.screens.MenuScreens;
 import net.minecraft.resources.ResourceLocation;
