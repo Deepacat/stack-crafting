@@ -24,6 +24,7 @@ import net.minecraft.world.level.Level;
 import net.minecraftforge.common.ForgeHooks;
 import net.minecraftforge.common.crafting.CraftingHelper;
 import net.minecraftforge.common.crafting.IShapedRecipe;
+import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.Nullable;
 import java.util.Iterator;
@@ -69,8 +70,12 @@ public class SWRecipe implements IShapedRecipe<CraftingContainer> {
         return this.group;
     }
 
-    public ItemStack getResultItem(RegistryAccess pRegistryAccess) {
+    public @NotNull ItemStack getResultItem(RegistryAccess pRegistryAccess) {
         return this.result;
+    }
+
+    public @NotNull ItemStack getResultItem() {
+        return result;
     }
 
     @Nullable
