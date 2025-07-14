@@ -1,8 +1,8 @@
 package net.deepacat.stackcrafting.workbench;
 
-import net.deepacat.stackcrafting.Registry.SCBlockRegistry;
-import net.deepacat.stackcrafting.Registry.SCMenuRegistry;
-import net.deepacat.stackcrafting.Registry.SCRecipeTypes;
+import net.deepacat.stackcrafting.registry.SCBlockRegistry;
+import net.deepacat.stackcrafting.registry.SCMenuRegistry;
+import net.deepacat.stackcrafting.registry.SCRecipeTypes;
 import net.deepacat.stackcrafting.StackCrafting;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.protocol.game.ClientboundContainerSetSlotPacket;

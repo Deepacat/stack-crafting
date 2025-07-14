@@ -1,4 +1,4 @@
-package net.deepacat.stackcrafting.Registry;
+package net.deepacat.stackcrafting.registry;
 
 import net.deepacat.stackcrafting.StackCrafting;
 import net.deepacat.stackcrafting.workbench.SWRecipe;

@@ -7,9 +7,9 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonSyntaxException;
-import net.deepacat.stackcrafting.Registry.SCRecipeSerializer;
-import net.deepacat.stackcrafting.Registry.SCRecipeTypes;
-import net.deepacat.stackcrafting.Registry.StackedIngredient;
+import net.deepacat.stackcrafting.registry.SCRecipeSerializer;
+import net.deepacat.stackcrafting.registry.SCRecipeTypes;
+import net.deepacat.stackcrafting.registry.StackedIngredient;
 import net.deepacat.stackcrafting.StackCrafting;
 import net.deepacat.stackcrafting.workbench.recipebook.SWRecipeBookTab;
 import net.minecraft.core.NonNullList;
@@ -71,8 +71,12 @@ public class SWRecipe implements IShapedRecipe<CraftingContainer> {
         return this.group;
     }
 
-    public ItemStack getResultItem(RegistryAccess pRegistryAccess) {
+    public @NotNull ItemStack getResultItem(RegistryAccess pRegistryAccess) {
         return this.result;
+    }
+
+    public @NotNull ItemStack getResultItem() {
+        return result;
     }
 
     @Nullable

@@ -1,6 +1,6 @@
 package net.deepacat.stackcrafting.events;
 
-import net.deepacat.stackcrafting.Registry.StackedIngredient;
+import net.deepacat.stackcrafting.registry.StackedIngredient;
 import net.deepacat.stackcrafting.StackCrafting;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.common.crafting.CraftingHelper;
