@@ -16,7 +16,7 @@ import net.minecraft.world.phys.BlockHitResult;
 import org.jetbrains.annotations.Nullable;
 
 public class SWBlock extends Block {
-    private static final Component CONTAINER_TITLE = Component.literal("bwaaa haiii");
+    private static final Component CONTAINER_TITLE = Component.translatable("emi.category.stackcrafting.stack_crafting");
 
     public SWBlock() {
         super(Properties.copy(Blocks.STONE).noOcclusion());
