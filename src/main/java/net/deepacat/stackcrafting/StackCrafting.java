@@ -5,7 +5,9 @@ import net.deepacat.stackcrafting.workbench.SWScreen;
 import net.minecraft.client.gui.screens.MenuScreens;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.inventory.RecipeBookType;
+import net.minecraft.world.item.CreativeModeTabs;
 import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.event.BuildCreativeModeTabContentsEvent;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
@@ -41,11 +43,18 @@ public class StackCrafting {
         SCRecipeTypes.RECIPE_TYPES.register(modEventBus);
         SCRecipeSerializer.RECIPE_SERIALIZERS.register(modEventBus);
 
+        modEventBus.addListener(this::addCreative);
         modEventBus.addListener(this::clientSetup);
     }
 
     private void clientSetup(final FMLClientSetupEvent e) {
         MenuScreens.register(SCMenuRegistry.SW_MENU.get(), SWScreen::new);
+    }
+
+    private void addCreative(BuildCreativeModeTabContentsEvent event) {
+        if (event.getTabKey() == CreativeModeTabs.FUNCTIONAL_BLOCKS) {
+            event.accept(SCBlockRegistry.STACK_WORKBENCH);
+        }
     }
 
     public void postInit(FMLLoadCompleteEvent evt) {
