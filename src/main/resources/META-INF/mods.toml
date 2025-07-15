@@ -26,14 +26,15 @@ displayName="Stack Crafting" #mandatory
 #updateJSONURL="https://change.me.example.invalid/updates.json" #optional
 # A URL for the "homepage" for this mod, displayed in the mod UI
 # A file name (in the root of the mod JAR) containing a logo for display
-# logoFile="createpowerlines.png" #optional
+logoFile="icon.png" #optional
 # A text field displayed in the mod UI
 #credits="Thanks to MRH0 for the base mod and the connectors" #optional
 # A text field displayed in the mod UI
 authors="Deepacat, Cyb0124" #optional
 # The description text for the mod (multi line!) (#mandatory)
 description='''
-
+This mod adds a new type of crafting table with a custom recipe type,
+this recipe type allows shaped cradting recipe inputs with a stack count rather than single items.
 '''
 # A dependency - use the . to indicate dependency for a specific modid. Dependencies are optional.
 [[dependencies.stackcrafting]] #optional
