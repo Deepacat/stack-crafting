@@ -1,0 +1,7 @@
+{
+  "variants": {
+    "": {
+      "model": "stackcrafting:block/stack_crafting_table"
+    }
+  }
+}
