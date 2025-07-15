@@ -27,11 +27,11 @@ public class SWScreen extends AbstractContainerScreen<SWMenu> implements RecipeU
         this.widthTooNarrow = this.width < 379;
         this.recipeBookComponent.init(this.width, this.height, this.minecraft, this.widthTooNarrow, this.menu);
         this.leftPos = this.recipeBookComponent.updateScreenPosition(this.width, this.imageWidth);
-        this.addRenderableWidget(new ImageButton(this.leftPos + 5, this.height / 2 - 49, 20, 18, 0, 0, 19, RECIPE_BUTTON_LOCATION, (p_289630_) -> {
-            this.recipeBookComponent.toggleVisibility();
-            this.leftPos = this.recipeBookComponent.updateScreenPosition(this.width, this.imageWidth);
-            p_289630_.setPosition(this.leftPos + 5, this.height / 2 - 49);
-        }));
+//        this.addRenderableWidget(new ImageButton(this.leftPos + 5, this.height / 2 - 49, 20, 18, 0, 0, 19, RECIPE_BUTTON_LOCATION, (p_289630_) -> {
+//            this.recipeBookComponent.toggleVisibility();
+//            this.leftPos = this.recipeBookComponent.updateScreenPosition(this.width, this.imageWidth);
+//            p_289630_.setPosition(this.leftPos + 5, this.height / 2 - 49);
+//        }));
         this.addWidget(this.recipeBookComponent);
         this.setInitialFocus(this.recipeBookComponent);
         this.titleLabelX = 29;
@@ -46,9 +46,9 @@ public class SWScreen extends AbstractContainerScreen<SWMenu> implements RecipeU
         this.renderBackground(pGuiGraphics);
         if (this.recipeBookComponent.isVisible() && this.widthTooNarrow) {
             this.renderBg(pGuiGraphics, pPartialTick, pMouseX, pMouseY);
-            this.recipeBookComponent.render(pGuiGraphics, pMouseX, pMouseY, pPartialTick);
+//            this.recipeBookComponent.render(pGuiGraphics, pMouseX, pMouseY, pPartialTick);
         } else {
-            this.recipeBookComponent.render(pGuiGraphics, pMouseX, pMouseY, pPartialTick);
+//            this.recipeBookComponent.render(pGuiGraphics, pMouseX, pMouseY, pPartialTick);
             super.render(pGuiGraphics, pMouseX, pMouseY, pPartialTick);
             this.recipeBookComponent.renderGhostRecipe(pGuiGraphics, this.leftPos, this.topPos, true, pPartialTick);
         }
@@ -69,7 +69,7 @@ public class SWScreen extends AbstractContainerScreen<SWMenu> implements RecipeU
 
     public boolean mouseClicked(double pMouseX, double pMouseY, int pButton) {
         if (this.recipeBookComponent.mouseClicked(pMouseX, pMouseY, pButton)) {
-            this.setFocused(this.recipeBookComponent);
+//            this.setFocused(this.recipeBookComponent);
             return true;
         } else {
             return this.widthTooNarrow && this.recipeBookComponent.isVisible() ? true : super.mouseClicked(pMouseX, pMouseY, pButton);
